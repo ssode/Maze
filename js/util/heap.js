@@ -9,6 +9,10 @@ class Heap {
         return this.heap[0];
     }
 
+    size() {
+        return this.heap.length;
+    }
+
     empty() {
         return this.heap.length === 0;
     }

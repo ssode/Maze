@@ -11,7 +11,6 @@ class Maze {
         this.ctx.lineWidth = 2;
         this.resizeCanvas();
         this.grid = [];
-        this.stack = [this.current];
         for (let i = 0; i < this.nRows; ++i) {
             this.grid.push([]);
             for (let j = 0; j < this.nCols; ++j) {
@@ -19,6 +18,7 @@ class Maze {
             }
         }
         this.current = this.getCell(0, 0);
+        this.stack = [this.current];
     }
 
     resizeCanvas() {
@@ -107,7 +107,7 @@ class Maze {
             this.current = nextCell;
             this.current.state = CellState.CURRENT;
             this.stack.push(this.current);
-        } else {
+        } else if (this.stack.length > 0) {
             this.current.state = CellState.EXPLORED;
             this.current = this.stack.pop();
             this.current.state = CellState.CURRENT;
@@ -117,21 +117,92 @@ class Maze {
 }
 
 (() => {
-    let m = new Maze(100, 100, 10);
+    let m = new Maze(25, 25, 25);
+    m.draw();
 
     let lastTime = 0;
+    let delay = 0;
+
+    let paused = true;
+    let animationLoop;
+
+    const inSpeed = document.querySelector('#inputSpeed');
+    inSpeed.addEventListener('input', () => {
+        delay = 1000 - inSpeed.value;
+    });
+
+    const dispFPS = document.querySelector('#dispFPS');
+
+    const btnPause = document.querySelector('#btnStart');
+    const btnReset = document.querySelector('#btnReset');
+    const inputRows = document.querySelector('#inputRows');
+    const inputCols = document.querySelector('#inputCols');
+    const inputSize = document.querySelector('#inputSize');
+    const inputAnimate = document.querySelector('#inputAnimate');
+
+    inputAnimate.addEventListener('change', () => {
+        if (inputAnimate.checked) {
+            btnPause.disabled = false;
+        } else {
+            btnPause.disabled = true;
+            paused = true;
+            btnPause.innerHTML = 'Start';
+        }
+    });
+
+    btnPause.addEventListener('click', () => {
+        if (paused && inputAnimate.checked) {
+            paused = false;
+            btnPause.innerHTML = 'Pause';
+        } else {
+            paused = true;
+            btnPause.innerHTML = 'Start';
+        }
+    });
+
+    btnReset.addEventListener('click', () => {
+        cancelAnimationFrame(animationLoop);
+        let nRows = parseInt(inputRows.value);
+        let nCols = parseInt(inputCols.value);
+        let cellSize = parseInt(inputSize.value);
+        nRows = nRows < 1 ? 1 : nRows;
+        nCols = nCols < 1 ? 1 : nCols;
+        cellSize = cellSize < 1 ? 1 : cellSize;
+        m = new Maze(nRows, nCols, cellSize);
+        if (inputAnimate.checked) {
+            paused = true;
+            requestAnimationFrame(loop);
+        } else {
+            new Promise(resolve => {
+                while (m.stack.length > 0) {
+                    m.update();
+                }
+                m.current.state = CellState.EXPLORED;
+                resolve();
+            }).then(() => {
+                m.draw();
+            });
+        }
+    });
 
     function loop(t) {
-        if (m.stack.length > 0) {
-            m.update();
-            m.draw();
-            m.ctx.fillStyle = 'white';
-            m.ctx.font = '12px arial'
-            m.ctx.fillText(20, 20, (t - lastTime) / 1000)
+        if (!paused) {
+            if (m.stack.length > 0) {
+                if (t - lastTime > delay) {
+                    m.update();
+                    m.draw();
+                    dispFPS.innerHTML = `FPS: ${(1 / ((t - lastTime) / 1000)).toPrecision(4)}`
+                    lastTime = t;
+                }
+            } else {
+                m.current.state = CellState.EXPLORED;
+                m.draw();
+                return;
+            }
         }
-        lastTime = t;
+        
         requestAnimationFrame(loop);
     }
-    requestAnimationFrame(loop);
+    animationLoop = requestAnimationFrame(loop);
 })();
 

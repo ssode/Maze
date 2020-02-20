@@ -9,9 +9,19 @@
 </head>
 
 <body>
-
+    <div id="controlArea">
+        <span id="dispFPS">FPS:</span>
+        <label for="inputSpeed">Speed:</label><input type="range" id="inputSpeed" min="0" max="1000" value="1000">
+        <label for="inputRows">Rows:</label><input type="number" id="inputRows" min="1" value="25">
+        <label for="inputCols">Columns:</label><input type="number" id="inputCols" min="1" value="25">
+        <label for="inputSize">Cell Size:</label><input type="number" id="inputSize" value="25">
+        <button id="btnStart">Start</button>
+        <button id="btnReset">Reset</button>
+        <label for="inputAnimate">Animate</label><input type="checkbox" id="inputAnimate" checked>
+    </div>
     <div id="container">
         <canvas id="mazeCanvas"></canvas>
+        
     </div>
 
     <script src="js/util/heap.js"></script>

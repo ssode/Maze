@@ -35,7 +35,7 @@ class Cell {
                 break;
 
             case CellState.CURRENT:
-                color = 'green';
+                color = 'red';
                 break;
 
             default:
@@ -48,7 +48,7 @@ class Cell {
 
         if (this.visited) {
             ctx.strokeStyle = 'black';
-            ctx.lineWidth = 2;
+            ctx.lineWidth = 3;
             ctx.beginPath();
             if (this.walls.north) {
                 ctx.moveTo(this.x * this.size, this.y * this.size);

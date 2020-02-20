@@ -2,12 +2,45 @@
 html, body {
     text-align: center;
     background-color: #222222;
+    margin: 0;
+}
+
+#controlArea {
+    font-family: "Lucida Console", Monaco, monospace;
+    font-size: 18px;
+    color: white;
+    text-align: left;
+    background-color: rgb(82, 82, 82);
+    padding: 5px;
+}
+
+#controlArea * {
+    margin-left: 10px;
+    margin-right: 10px;
+    vertical-align: middle;
+}
+
+#controlArea button {
+    background-color: rgb(36, 154, 184);
+    color: white;
+    border: none;
+    padding: 5px;
+    font-weight: bold;
+    width: 100px;
+}
+
+#controlArea button:hover {
+    background-color: rgb(38, 173, 236);
+}
+
+#constrolArea button[disabled=disabled] {
+    background-color: gray;
+}
+
+#controlArea button:active {
+    background-color: rgb(3, 112, 163);
 }
 
 #container {
-    margin-top: 200px;
-}
-
-#mazeCanvas {
-    border: 2px solid gray;
+    margin-top: 40px;
 }
