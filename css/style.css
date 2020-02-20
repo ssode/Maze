@@ -1,0 +1,13 @@
+
+html, body {
+    text-align: center;
+    background-color: #222222;
+}
+
+#container {
+    margin-top: 200px;
+}
+
+#mazeCanvas {
+    border: 2px solid gray;
+}
